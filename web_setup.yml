@@ -25,16 +25,16 @@
     - name: Agrego registro al archivo host
       ansible.builtin.lineinfile:
         path: /etc/hosts
-        line: "192.168.56.20 {{ virtual_server }}.com"
+        line: "192.168.56.20 www.ejemplo.com.uy"
         state: present
-        delegate_to: localhost
-        connection: local
+      delegate_to: localhost
+      connection: local
 
     - name: Modificar la configuración de apache
       ansible.builtin.lineinfile:
         path: /etc/httpd/conf/httpd.conf
         line: "IncludeOptional /etc/httpd/vhost.d/*.conf"
-        notify: Reiniciar apache
+      notify: Reiniciar apache
 
     - name: Verifico existencia de directorio para configurar vhost
       ansible.builtin.file:
@@ -46,7 +46,7 @@
 
     - name: Verificar si existe el directorio para alojar el sitio
       ansible.builtin.file:
-        path: "/var/www/{{ virtual_server }}/html"
+        path: "/var/www/ejemplo.com.uy/html"
         state: directory
         owner: apache
         group: apache
@@ -55,16 +55,16 @@
     - name: Configurar vhost
       ansible.builtin.template:
         src: ./templates/virtualhost.j2
-        dest: "/etc/httpd/vhost.d/{{ virtual_server }}.conf"
+        dest: "/etc/httpd/vhost.d/ejemplo.com.uy.conf"
         owner: root
         group: root
         mode: '0644'
-        notify: Reiniciar apache
+      notify: Reiniciar apache
 
     - name: Página índice generada por template
       ansible.builtin.template:
         src: ./templates/index.j2
-        dest: /var/www/{{ virtual_server }}/html/index.html
+        dest: /var/www/ejemplo.com.uy/html/index.html
         owner: apache
         group: apache
         mode: '0644'
