@@ -1,0 +1,12 @@
+1. ¿Qué es Ansible y por qué es "sin agente" (agentless)?
+
+2. Explica la diferencia entre un comando ad-hoc y un playbook
+
+3. ¿Qué es la idempotencia y por qué es importante en Ansible?
+
+4. ¿Cómo funcionan los handlers y cuándo deberías usarlos?
+
+5. ¿Cómo verificas errores de sintaxis en un playbook de Ansible?
+
+----
+

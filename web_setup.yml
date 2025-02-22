@@ -1,0 +1,76 @@
+- name: Despliegue Apache web server y configuración
+  hosts: Centos
+  become: true
+  tasks:
+    - name: Instalar apache (HTTPD)
+      ansible.builtin.yum:
+        name: httpd
+        state: present
+
+    - name: Iniciar servicio apache y habilitarlo
+      ansible.builtin.systemd:
+        name: httpd
+        state: started
+        enabled: true
+
+    - name: Reglas de firewall
+      ansible.posix.firewalld:
+        service: "{{ item }}"
+        state: enabled
+        permanent: true
+        immediate: true
+      loop:
+        - http
+
+    - name: Agrego registro al archivo host
+      ansible.builtin.lineinfile:
+        path: /etc/hosts
+        line: "192.168.56.20 {{ virtual_server }}.com"
+        state: present
+        delegate_to: localhost
+        connection: local
+
+    - name: Modificar la configuración de apache
+      ansible.builtin.lineinfile:
+        path: /etc/httpd/conf/httpd.conf
+        line: "IncludeOptional /etc/httpd/vhost.d/*.conf"
+        notify: Reiniciar apache
+
+    - name: Verifico existencia de directorio para configurar vhost
+      ansible.builtin.file:
+        path: /etc/httpd/vhost.d
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Verificar si existe el directorio para alojar el sitio
+      ansible.builtin.file:
+        path: "/var/www/{{ virtual_server }}/html"
+        state: directory
+        owner: apache
+        group: apache
+        mode: '0755'
+
+    - name: Configurar vhost
+      ansible.builtin.template:
+        src: ./templates/virtualhost.j2
+        dest: "/etc/httpd/vhost.d/{{ virtual_server }}.conf"
+        owner: root
+        group: root
+        mode: '0644'
+        notify: Reiniciar apache
+
+    - name: Página índice generada por template
+      ansible.builtin.template:
+        src: ./templates/index.j2
+        dest: /var/www/{{ virtual_server }}/html/index.html
+        owner: apache
+        group: apache
+        mode: '0644'
+
+  handlers:
+    - name: Reiniciar apache
+      ansible.builtin.systemd:
+        name: httpd
+        state: restarted
