@@ -1,0 +1,102 @@
+- name: Hardenizado de servidor Ubuntu
+  hosts: Ubuntu
+  become: true
+
+  tasks:
+    # Habilitar el firewall UFW
+    - name: Habilito el firewall UFW
+      ufw:
+        state: enabled
+
+    # Bloquear todo el tráfico entrante y reiniciar UFW
+    - name: Bloqueo todo trafico entrante y reinicio UFW
+      ufw:
+        policy: deny
+        protocol: any
+        direction: incoming
+      notify: Reiniciar UFW
+
+    # Permitir el tráfico saliente y reiniciar UFW
+    - name: Permito el trafico saliente y reinicio UFW
+      ufw:
+        policy: allow
+        protocol: any
+        direction: outgoing
+      notify: Reiniciar UFW
+
+    # Permitir el tráfico por el puerto 22 (puerto por defecto del servicio SSH)
+    - name: Permito el trafico por el puerto 22 (puerto por defecto del servicio SSH)
+      ufw:
+        rule: allow
+        port: '22'
+      notify: Reiniciar UFW
+
+    # Verificar existencia del archivo authorized_keys, si no existe, lo creo
+    - name: Verifico existencia del archivo Authorized_keys
+      ansible.builtin.shell: "touch /home/sysadmin/.ssh/authorized_keys"
+
+    # Verificar si la clave SSH del usuario sysadmin está en el archivo authorized_keys
+    - name: Verifico que la clave SSH del usuario sysadmin esté agregada en el archivo authorized_keys
+      ansible.builtin.shell: "cat /home/sysadmin/.ssh/authorized_keys | grep 'sysadmin'"
+      ignore_errors: true
+      register: Clave
+
+    # Generar un par de claves SSH para el usuario sysadmin solo si la clave no existe
+    - name: Genero un par de claves SSH para el usuario sysadmin solo en caso de que la salida estándar esté vacía
+      openssh_keypair:
+        path: "/home/sysadmin/.ssh/id_rsa"
+        owner: sysadmin
+        group: sysadmin
+        mode: 0600
+        size: 2048
+      become_user: sysadmin  
+      when: Clave.stdout == ""     
+
+    # Copiar la clave SSH pública del usuario sysadmin al archivo authorized_keys
+    - name: Copio la clave SSH pública del usuario sysadmin al archivo authorized_keys en el servidor
+      authorized_key:
+        user: sysadmin
+        state: present
+        key: "{{ lookup('file', '/home/sysadmin/.ssh/id_rsa.pub') }}"
+        path: "/home/sysadmin/.ssh/authorized_keys"
+      become_user: sysadmin
+      notify: Reiniciar SSH
+      when: Clave.stdout == ""
+
+    # Permitir el login solamente con clave SSH 1
+    - name: Permito el login solamente con clave SSH
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config
+        search_string: '#PubkeyAuthentication yes'
+        line: PubkeyAuthentication yes
+        owner: root
+        group: root
+        mode: '0644'
+      become_user: root
+      notify: Reiniciar SSH
+
+# Permitir el login solamente con clave SSH 2
+    - name: Permito el login solamente con clave SSH
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config
+        search_string: '#PasswordAuthentication yes'
+        line: PasswordAuthentication no
+        owner: root
+        group: root
+        mode: '0644'
+      become_user: root
+      notify: Reiniciar SSH
+
+
+  handlers:
+    # Reiniciar UFW
+    - name: Reiniciar UFW
+      ansible.builtin.systemd:
+        name: ufw
+        state: restarted
+
+    # Reiniciar SSH
+    - name: Reiniciar SSH
+      ansible.builtin.systemd:
+        name: ssh
+        state: restarted
