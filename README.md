@@ -1,5 +1,6 @@
-Obligatorio: Taller de Linux 2025
-- Documento informativo
+# Obligatorio: Taller de Linux 2025
+## Documento informativo
+#
 
 Autores:
 - ###### Pablo Delucchi - N° 315123 
