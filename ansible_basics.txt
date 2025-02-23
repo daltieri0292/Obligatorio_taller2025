@@ -1,12 +1,28 @@
+Autores:
+- Pablo Delucchi (315123)
+- Agustín Guarteche (240159)
+
 1. ¿Qué es Ansible y por qué es "sin agente" (agentless)?
 
+- En pocas palabras, Ansible es una herramienta (software) de automatización de configuraciones y gestión de sistemas remotos. Es utilizado para llevar un sistema a un estado deseado. Es OpenSource y funciona bajo una gran variedad de sistemas (no solamente bajo Linux). Basa su funcionamiento en el uso de módulos (pequeños programas escritos en python que se ejecutan remotamente en los equipos objetivos, comunmente conocidos como "nodos"). Puede utilizarse por ejemplo para realizar instalaciones o actualizaciones de software, aplicar configuraciones, gestionar el funcioamiento de los programas o servicios y, en general cualquier tipo de tarea que podría necesitar llevar a cabo un administrador de sistemas. Todo ello en forma remota y sin la necesidad de instalar ningún programa adicional en los nodos objetivos.
+Decimos entonces que Ansible es "agentless" porque se ejecuta directamente en el host a traves de SSH o WinRM (en Windows) donde copia sus módulos sin la necesidad de instalar programas o agentes que le hagan de intermediarios (salvo el propio intérprete de python que es requerido). los playbooks o comandos ad-hoc ejecutados en los equipos no requieren de dependencias adicinales para funcionar, salvo en aquellos casos (playbooks) donde se utilicen colecciones (Collections) en las que serán requeridas aquellas dependencias externas que el desarrollador haya decidido utilizar.
+ 
 2. Explica la diferencia entre un comando ad-hoc y un playbook
+ 
+- Los comandos ad-hoc se utilizan cuando se quieren ejecutar comandos aislados (únicos o simples) en uno o varios host para obtener así información de manera rápida como por ejemplo el tiempo de actividad, la cantidad de memoria utilizazda, la disponibilidad de un host (ping) etc. En ellos no es posible especificar condicionales o instrucciones múltiples pero son útiles cuando se quiere ejecutar un determinado comando en un grán número de equipos ya que son mas simples y se utilizan desde la consola sin necesidad de escribir un archivo de playbook.
+Por otro lado, un playbook es una secuencia ordenada de instrucciones ("tareas") en un formato y estructura específica escrita en un archivo de tipo YML. Los playbook se utilizan para la ejecución remota de tareas mas complejas y estructuradas. Si bien los playbooks están diseñados para tener un flujo de ejecución ordenado y no es posible alterar este (no hay instrucciones de tipo "GoTo" que permitan por ejemplo volver atrás o el uso de ciclos de repetición o "for"), aqui si es posible utilizar instrucciones de comparación (if -when-) y generar así tareas mas complejas o hacer uso de variables.
+Por lo general, todo comando ad-hoc tiene su equivalente en un playbook (aunque no sea lo mas cómodo), todo comando ad-hoc puede ejecutarse creando un playbook, pero no en sentido inverso.  
 
 3. ¿Qué es la idempotencia y por qué es importante en Ansible?
 
+- La idempotencia hace referencia a una característica de Ansible gracias al cual se garantiza que la salida de cualquier comando o playbook que se ejecute en un nodo ya sea este remoto o local, va a ser siempre la misma es decir que se van a obtener siempre los mismos resultados independientemente de las condiciones iniciales del sistema, esto, a diferencia de por ejemplo de un script bash o de powershell en donde dependiendo del entorno donde se ejecute y de algunas condiciones externas el script podría retornar un resultado u otro. Si el sistema ya se encuentra en un estado deseado, la tarea de Ansible no se ejecuta.
+
 4. ¿Cómo funcionan los handlers y cuándo deberías usarlos?
+- Los handlers en Ansible son tareas que son ejecutadas de forma condicional solamente cuando otras tareas realizan cambios de estado (en dicho caso se dice que tarea les "notifica"), también suelen utilizarse para la ejecución de tareas que deben llevarse a cabo en forma repetitiva.
+Se utilizan para que los playbooks se mantengan ordenados y sean mas eficientes ya que evitan la repetición de código: es mas sencillo por ejemplo crear un handler para reiniciar un servicio y "llamarlo" cada vez que sea necesario, que escribir una tarea para reiniciarlo en cada oportunidad, es mas fácil crear un handler para verificar si una actualización realizó cambios en el sistema y reiniciar este que escribir una tarea que revise los cambios aplicados y luego decida si es necesario reiniciar o no el sistema.
 
 5. ¿Cómo verificas errores de sintaxis en un playbook de Ansible?
 
-----
+- Hay varias formas de verificar la sintaxis de un playbook de Ansible, algunas de las mas conocidas son utilizar "Ansible-playbook" con el parámetro --check-sintaxis (Ej: Ansible-Playbook -i $ArchivoInventario $ArchivoPlaybook --syntax-check) aunque también es posible la verificación mediante programas externos como "Ansible lint"(ansible-lint $ArchivoPlaybbok) siendo este el preferido ya que no solo analiza la sintaxis.
 
+----

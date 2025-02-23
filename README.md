@@ -1,5 +1,5 @@
-## &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Obligatorio: Taller de Linux 2025
-#### &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Documento informativo
+Obligatorio: Taller de Linux 2025
+- Documento informativo
 
 Autores:
 - ###### Pablo Delucchi - N° 315123 
@@ -28,32 +28,32 @@ ansible-galaxy install -r collections/requirements.yml
 # Pruebas de ejecución 
 
 Módulo PING (todos los hosts):
-![ANSIBLE ping](file:results/ANSIBLE_ping.JPG)
+![ANSIBLE_IMG1](file:results/ANSIBLE_ping.JPG)
 
 Obtención del tiempo de actividad (todos los hosts):
-![ANSIBLE ping](file:results/ANSIBLE_adhoc_uptime.JPG)
+![ANSIBLE_IMG2](file:results/ANSIBLE_adhoc_uptime.JPG)
 
 Instalación de apache (en webserver Centos):
-![ANSIBLE ping](file:results/ANSIBLE_adhoc_apache.JPG)
+![ANSIBLE_IMG3](file:results/ANSIBLE_adhoc_apache.JPG)
 
 Uso de espacio en disco (en servidor Ubuntu):
-![ANSIBLE ping](file:results/ANSIBLE_adhoc_espacio.JPG)
+![ANSIBLE_IMG4](file:results/ANSIBLE_adhoc_espacio.JPG)
 
 Verificación de sintaxis playbook "web_setup.yml", ejecución y resultado (en webserver Centos): 
-![ANSIBLE ping](file:results/ANSIBLE_webserver_playbook_sintaxis.JPG)
-![ANSIBLE ping](file:results/ANSIBLE_webserver_playbook_ejecucion.JPG)
-![ANSIBLE ping](file:results/ANSIBLE_webserver_playbook_resultado2.JPG)
-![ANSIBLE ping](file:results/ANSIBLE_webserver_playbook_resultado3.JPG)
-![ANSIBLE ping](file:results/ANSIBLE_webserver_playbook_resultado.JPG)
+![ANSIBLE_IMG5](file:results/ANSIBLE_webserver_playbook_sintaxis.JPG)
+![ANSIBLE_IMG6](file:results/ANSIBLE_webserver_playbook_ejecucion.JPG)
+![ANSIBLE_IMG7](file:results/ANSIBLE_webserver_playbook_resultado2.JPG)
+![ANSIBLE_IMG8](file:results/ANSIBLE_webserver_playbook_resultado3.JPG)
+![ANSIBLE_IMG9](file:results/ANSIBLE_webserver_playbook_resultado.JPG)
 
 Verificación de sintaxis playbook "hardening.yml", ejecución y resultados (en servidor Ubuntu): 
-![ANSIBLE ping](file:results/ANSIBLE_hardening_playbook_sintaxis.JPG)
+![ANSIBLE_IMG10](file:results/ANSIBLE_hardening_playbook_sintaxis.JPG)
 Comando: ansible-playbook -i inventory.ini hardening.yml --become --ask-become-pass
-![ANSIBLE ping](file:results/ANSIBLE_harening_playbook_ejecucion.JPG) 
+![ANSIBLE_IMG11](file:results/ANSIBLE_harening_playbook_ejecucion.JPG) 
 
 Archivo visualizado: "/etc/ssh/sshd/sshd_config"
-![ANSIBLE ping](file:results/ANSIBLE_hardening_playbook_resultado1.JPG) 
-![ANSIBLE ping](file:results/ANSIBLE_hardening_playbook_resultado2.JPG) 
+![ANSIBLE_IMG12](file:results/ANSIBLE_hardening_playbook_resultado1.JPG) 
+![ANSIBLE_IMG13](file:results/ANSIBLE_hardening_playbook_resultado2.JPG) 
 
 Obs: Como ya se encontraba habilitado el tráfico por el puerto por defecto de SSH, procedimos a agregarlo nuevamente (sin especificar protocolo para que pudiera verse el cambio generado)
 
@@ -82,7 +82,7 @@ Obs: Como ya se encontraba habilitado el tráfico por el puerto por defecto de S
 
   * **Solución encontrada**: Durante la ejecución del playbook se verifica si hay alguna clave SSH para el usuario "sysadmin" en el archivo de host conocidos. (el cual previamente se crea si no existe) El problema que estábamos teniendo era que si la clave no existe en el archivo (es decir si la salida era vacía) nos generaba un error que detenía el playbook. como solución encontramos que podíamos agregar una instrucción "ignore_errors: true" para que en dicho caso continuara la ejecución.
  
- ![ANSIBLE ping](file:results/ANSIBLE_hardening_error_verificar.JPG) 
+ ![ANSIBLE_IMG14](file:results/ANSIBLE_hardening_error_verificar.JPG) 
  
  Otro error contrado fue que debíamos generar las claves para el usuario "sysadmin" y no para el usuario root (estaba especificado become:true pero no se especificó un usuario particular), esto se solucionó adicionando "become_user = sysadmin" cuando fuera necesario para generarle sus claves SSH.
 
