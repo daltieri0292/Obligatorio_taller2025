@@ -29,32 +29,32 @@ ansible-galaxy install -r collections/requirements.yml
 # Pruebas de ejecución 
 
 Módulo PING (todos los hosts):
-![ANSIBLE_IMG1](file:results/ANSIBLE_ping.JPG)
+![ANSIBLE_ping](https://github.com/user-attachments/assets/1553ac21-a06b-4563-8a2e-fc2bf8101984)
 
 Obtención del tiempo de actividad (todos los hosts):
-![ANSIBLE_IMG2](file:results/ANSIBLE_adhoc_uptime.JPG)
+![ANSIBLE_adhoc_uptime](https://github.com/user-attachments/assets/c5df853d-ce01-477c-9bbc-a45a3f0e85b7)
 
 Instalación de apache (en webserver Centos):
-![ANSIBLE_IMG3](file:results/ANSIBLE_adhoc_apache.JPG)
+![ANSIBLE_adhoc_apache](https://github.com/user-attachments/assets/335b0558-a1c3-42fe-a325-15c1d6de69a5)
 
 Uso de espacio en disco (en servidor Ubuntu):
-![ANSIBLE_IMG4](file:results/ANSIBLE_adhoc_espacio.JPG)
+![ANSIBLE_adhoc_espacio](https://github.com/user-attachments/assets/584ede2d-50ad-425f-8318-e9f92789eb82)
 
 Verificación de sintaxis playbook "web_setup.yml", ejecución y resultado (en webserver Centos): 
-![ANSIBLE_IMG5](file:results/ANSIBLE_webserver_playbook_sintaxis.JPG)
-![ANSIBLE_IMG6](file:results/ANSIBLE_webserver_playbook_ejecucion.JPG)
-![ANSIBLE_IMG7](file:results/ANSIBLE_webserver_playbook_resultado2.JPG)
-![ANSIBLE_IMG8](file:results/ANSIBLE_webserver_playbook_resultado3.JPG)
-![ANSIBLE_IMG9](file:results/ANSIBLE_webserver_playbook_resultado.JPG)
+![ANSIBLE_webserver_playbook_sintaxis](https://github.com/user-attachments/assets/8d2a6eaa-b73b-49aa-8b88-b915c6e40994)
+![ANSIBLE_webserver_playbook_ejecucion](https://github.com/user-attachments/assets/a6f63c5b-08e5-4f67-b176-2b876f48f25d)
+![ANSIBLE_webserver_playbook_resultado2](https://github.com/user-attachments/assets/e469218c-1105-43dc-81fd-b021f1e99750)
+![ANSIBLE_webserver_playbook_resultado3](https://github.com/user-attachments/assets/209e9607-1253-47e8-8da6-0bd30b8f9860)
+![ANSIBLE_webserver_playbook_resultado](https://github.com/user-attachments/assets/75655cc9-9b55-45c7-91b6-2b70903c4590)
 
 Verificación de sintaxis playbook "hardening.yml", ejecución y resultados (en servidor Ubuntu): 
-![ANSIBLE_IMG10](file:results/ANSIBLE_hardening_playbook_sintaxis.JPG)
+![ANSIBLE_hardening_playbook_sintaxis](https://github.com/user-attachments/assets/4f3a3dc9-1ec4-4770-8f09-81a064facbf2)
 Comando: ansible-playbook -i inventory.ini hardening.yml --become --ask-become-pass
-![ANSIBLE_IMG11](file:results/ANSIBLE_harening_playbook_ejecucion.JPG) 
+![ANSIBLE_harening_playbook_ejecucion](https://github.com/user-attachments/assets/3d6627cf-bfa5-45ac-a803-6b0f5bd071f4)
 
 Archivo visualizado: "/etc/ssh/sshd/sshd_config"
-![ANSIBLE_IMG12](file:results/ANSIBLE_hardening_playbook_resultado1.JPG) 
-![ANSIBLE_IMG13](file:results/ANSIBLE_hardening_playbook_resultado2.JPG) 
+![ANSIBLE_hardening_playbook_resultado1](https://github.com/user-attachments/assets/4cbe12b9-6814-4b03-bf79-b6b220286fc4)
+![ANSIBLE_hardening_playbook_resultado2](https://github.com/user-attachments/assets/df6e414b-7929-41e6-9909-c42861068209)
 
 Obs: Como ya se encontraba habilitado el tráfico por el puerto por defecto de SSH, procedimos a agregarlo nuevamente (sin especificar protocolo para que pudiera verse el cambio generado)
 
@@ -82,8 +82,8 @@ Obs: Como ya se encontraba habilitado el tráfico por el puerto por defecto de S
 * Problema: Error de ejecución en playbook en caso de no existir archivo de host conocidos. Creación de clave propietaria
 
   * **Solución encontrada**: Durante la ejecución del playbook se verifica si hay alguna clave SSH para el usuario "sysadmin" en el archivo de host conocidos. (el cual previamente se crea si no existe) El problema que estábamos teniendo era que si la clave no existe en el archivo (es decir si la salida era vacía) nos generaba un error que detenía el playbook. como solución encontramos que podíamos agregar una instrucción "ignore_errors: true" para que en dicho caso continuara la ejecución.
- 
- ![ANSIBLE_IMG14](file:results/ANSIBLE_hardening_error_verificar.JPG) 
+   
+ ![ANSIBLE_hardening_error_verificar](https://github.com/user-attachments/assets/b32b9fff-147c-4a9a-b432-1e3810f45916)
  
  Otro error contrado fue que debíamos generar las claves para el usuario "sysadmin" y no para el usuario root (estaba especificado become:true pero no se especificó un usuario particular), esto se solucionó adicionando "become_user = sysadmin" cuando fuera necesario para generarle sus claves SSH.
 
