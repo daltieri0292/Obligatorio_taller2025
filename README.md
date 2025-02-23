@@ -87,6 +87,18 @@ Obs: Como ya se encontraba habilitado el tráfico por el puerto por defecto de S
  
  Otro error contrado fue que debíamos generar las claves para el usuario "sysadmin" y no para el usuario root (estaba especificado become:true pero no se especificó un usuario particular), esto se solucionó adicionando "become_user = sysadmin" cuando fuera necesario para generarle sus claves SSH.
 
+
+* Problema: El host bastión no responde al módulo PING de ANSIBLE
+![ANSIBLE_error_ping_bastion](https://github.com/user-attachments/assets/93d12380-f5c8-409b-9bb9-b7c19f56751a)
+
+  * **Solución encontrada**: Para que el host Bastión respondiera el ping enviado por ANSIBLE, encontramos que podíamos copiar la clave SSH en sí mismo mediante el comando "ssh-copy-id sysadmi@$IP"
+ 
+* Problema: El módulo ping de ANSIBLE falla por la carencia del paquete sshpass.
+![ANSIBLE_error_sshpass](https://github.com/user-attachments/assets/a94e185f-bf3d-4bf6-8359-8ac37760d67a)
+    
+  * **Solución encontrada**: Encontramos que el error se resolvía simplemente instalando el paquete "sshpass" m mediante "dnf install sshpass -y" 
+ 
+
 #
 
 # Referencias
