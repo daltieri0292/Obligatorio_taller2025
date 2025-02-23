@@ -23,6 +23,6 @@ Se utilizan para que los playbooks se mantengan ordenados y sean mas eficientes 
 
 5. ¿Cómo verificas errores de sintaxis en un playbook de Ansible?
 
-- Hay varias formas de verificar la sintaxis de un playbook de Ansible, algunas de las mas conocidas son utilizar "Ansible-playbook" con el parámetro --check-sintaxis (Ej: Ansible-Playbook -i $ArchivoInventario $ArchivoPlaybook --syntax-check) aunque también es posible la verificación mediante programas externos como "Ansible lint"(ansible-lint $ArchivoPlaybbok) siendo este el preferido ya que no solo analiza la sintaxis.
+- Hay varias formas de verificar la sintaxis de un playbook de Ansible, algunas de las mas conocidas son utilizar "Ansible-playbook" con el parámetro --syntax-check (Ej: Ansible-Playbook -i $ArchivoInventario $ArchivoPlaybook --syntax-check) aunque también es posible la verificación mediante programas externos como "Ansible lint"(ansible-lint $ArchivoPlaybbok) siendo este el preferido ya que no solo analiza la sintaxis.
 
 ----
